@@ -19,26 +19,31 @@ class App extends Component {
         <div className="container">
           <Search onSubmit={this.add}/>
           <br />
-          <Array onSubmit={this.delete} people={this.state.people} /> 
+          <Array onSubmit={this.delete} profiles={this.state.profiles} /> 
         </div>
       </div>
     );
   }
 
-  add = bio => {
-    this.setState(p => ({
-      profiles: p.profiles.concat(bio)
+  add = (bio) => {
+    this.setState(pS => ({
+      profiles: pS.profiles.concat(bio)
     }))
   }
 
-  delete() {
-
+  delete = (bio) => {
+    let newL = [...this.state.profiles];
+    let index = newL.indexOf(bio);
+    newL.splice(index, 1);
+    this.setState({
+      profiles: newL
+    });
   }
 }
 
 export default App;
 const Array = props => {
   return <div>
-    {props.people && props.people.map(user => <Users onSubmit={props.delete} {...user} />)}
+    {props.profiles && props.profiles.map(user => <Users onSubmit={props.delete} {...user} />)}
   </div>
 }
