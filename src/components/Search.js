@@ -1,40 +1,41 @@
-import React, {Component} from 'react'
-import {Form, Button, FormGroup, FormControl } from 'react-bootstrap';
+import React, {Component} from 'react';
 import axios from 'axios';
-import PropTypes from 'prop-types';
+import {Form, Button, FormGroup, FormControl } from 'react-bootstrap';
 
-class Search extends Component{
-  constructor(props){
-    super(props)
-    this.state = {user: ""}
+class Search extends Component {
+  state = {
+    name: '',
+    error: ''
+  }
+
+  handleSubmit = event => {
+    event.preventDefault();
+    console.log(this.state);
+
+    axios
+      .get(`https://api.github.com/users/${this.state.name}`)
+      .then(resp => {
+        this.props.onSubmit(resp.data);
+        this.setState({name: '', error: ''});
+      })
+      .catch(err => {
+        this.setState({error: err});
+      });
   }
 
   render(){
+    const { error } = this.state;
     return (
-      <Form inline onSubmit={this.Submit} >
+      <Form inline ref={form => this.formEl = form} onSubmit = {this.handleSubmit}>
         <FormGroup controlId="formInlineEmail">
-          <FormControl type="text" placeholder="Enter Username" value={this.state.user}
-        onChange={e => this.setState({ user: e.target.value })}/>
+          <FormControl type="text" placeholder="Enter username" value={this.state.name}
+            onChange={event => this.setState({name: event.target.value})} required/>
         </FormGroup>{' '}
-        <Button type="submit" >Add</Button>
+        <Button type="submit">Add</Button>
+        { error && (alert('User not found!'))}
       </Form>
     )
   }
-
-  Submit = e => {
-    e.preventDefault()
-    axios
-      .get(`https://api.github.com/users/${this.state.user}`)
-      .then(bio => {
-        this.props.onSubmit(bio.data)
-        this.setState({user: ""})
-      })
-  }
 }
-
-Search.propTypes = {
-  onSubmituser: PropTypes.func
-};
-
 
 export default Search;

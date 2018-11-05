@@ -1,29 +1,17 @@
 import React from 'react';
-import { Grid, Row, Col, Panel, Media, Button } from 'react-bootstrap';
+import { Grid, Row, Col} from 'react-bootstrap';
+import User from './User'
 
 const Users = props => {
   return (
     <Grid>
       <Row className="show-grid">
         <Col xs={12} md={8}>
-          <Panel>
-            <Panel.Body>
-              <Media>
-                <Media.Left>
-                <img width={64} height={64} src={props.avatar_url} alt="thumbnail"></img>
-                </Media.Left>
-                <Media.Body>
-                  <Media.Heading>{props.login}</Media.Heading>
-                  <p>{props.bio}</p>
-                </Media.Body>
-              </Media>
-              <Button onClick={props.delete} >Delete</Button>
-            </Panel.Body>
-          </Panel>
+          <div> { props.profiles.map(user => <User user={user} onDelete={props.onDelete} />) } </div>
         </Col>
       </Row>
     </Grid>
-  )
+  );
 }
 
 export default Users;
